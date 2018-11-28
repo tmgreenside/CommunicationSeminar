@@ -309,3 +309,14 @@ class Tag(models.Model):
     def frequency(self):
         words = Word.objects.filter(tag=self).all()
         return SequentialWords.objects.filter(word__in=words).count()
+
+# Discussion Board
+class Topic(models.Model):
+    personPosted = models.CharField(max_length=255)
+    topic = models.CharField(max_length=255)
+
+class Reply(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    personPosted = models.CharField(max_length=255)
+    message = models.CharField(max_length=255)
+    hasMark = models.IntegerField()

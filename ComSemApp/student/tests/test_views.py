@@ -218,11 +218,13 @@ class TestExpressionListView(TestSubmissionsMixin):
         self.assertIn(self.expression_2, response.context['expressions'])
 
 
+
+
 class TestAttemptCreateView(TestSubmissionsMixin):
 
     def test_get_success(self):
         response = self.client.get(reverse("student:create_attempt",
-                kwargs={'course_id': self.course.id, 'worksheet_id': self.released_worksheet.id,
+                kwargs={'course_id': self.course.id, 'worksheet_i': self.released_worksheet.id,
                         'submission_id': self.submission.id, 'expression_id': self.expression_1.id}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['expression'], self.expression_1)
