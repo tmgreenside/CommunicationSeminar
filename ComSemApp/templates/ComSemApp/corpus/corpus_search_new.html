@@ -8,6 +8,8 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 
 {% block content %}
 
+{% csrf_token %}
+
 <!-- Page-Title -->
 <div class="row">
 	<div class="col-sm-12">
@@ -111,7 +113,6 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 
 	function showValue(id, value) {
 		appendCriterion('word', value, id);
-		alert(id + " " + value);
 	}
 
 	// type in ('word', 'tag')
@@ -122,6 +123,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			id_list: id_list,
 		});
 		$('#searchCriteria').val(JSON.stringify(searchCriteria));
+		alert($('#searchCriteria').val());
 	}
 
 	/*
@@ -187,6 +189,14 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			progressTimeout = setTimeout(getWordPosTags, 500, "#word2", "#DynamicField2");
 		});
 
+		$("#SubmitSearchForm").submit(function(e){
+			e.preventDefault();
+			var data = {
+				'searchCriteria': $('#searchCriteria').val(),
+				'searchType': $('[name=searchType]:checked').val(),
+			}
+			$('#searchResults').show().html("<div class='row float-middle'>Loading...</div>").load("{% url 'corpus:search_results' %}", data );
+		});
 	});
 
 </script>
