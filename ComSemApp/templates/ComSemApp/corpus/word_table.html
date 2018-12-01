@@ -22,7 +22,7 @@
 		<tr>
 			<td class="checkbox-cell">
 				<div class="checkbox checkbox-primary">
-					<input type="checkbox" name="selector_checked[]" value="{{ word.id }}" id="result_{{ word.form }}{{ forloop.counter }}" onclick="showValue(this.value, '{{ word.form }}');">
+					<input type="checkbox" name="{{ word.form }}_selector_checked[]" value="{{ word.id }}" id="result_{{ word.form }}{{ forloop.counter }}" >
 					<label for="result_{{ word.form }}{{ forloop.counter }}"></label>
 				</div>
 			</td>

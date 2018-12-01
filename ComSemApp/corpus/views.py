@@ -66,7 +66,7 @@ def search_results(request):
     search_criteria = json.loads(search_criteria)
 
     query = build_query(len(search_criteria) - 1, search_criteria, sequential_search)
-    print(query)
+    print("Query:", query)
     with connection.cursor() as cursor:
         expression_ids = []
         cursor.execute(query)
