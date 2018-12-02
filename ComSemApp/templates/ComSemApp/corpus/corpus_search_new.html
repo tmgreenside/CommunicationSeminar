@@ -110,8 +110,11 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 
 <script>
 
+	// Holds search data that is sent to Django to extract sentences from the
+	// corpus for search.
 	var searchCriteria = [];
 
+	// Adds each checked word / POS tag pair to the search criteria
 	function collectData(posTableWord) {
 		var type = $('#search_type').val()
 		var id_list = [];
@@ -123,20 +126,14 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			}
 		});
 
-		buildSearchQueryRow(type, val, id_list);
+		appendCriterion(type, val, id_list);
 	}
 
-	function buildSearchQueryRow(type, val, id_list){
-
-		row_string = "<tr><td>" + type + "</td><td>" + val + "</td><td><button class='btn btn-sm btn-outline-danger float-right' type='button' name='DeleteRow'><i class='ti-trash'></i></button></td></tr>"
-
-		$("#DynamicField").empty();
-		$("#sortParams table").show().find("tbody").append(row_string);
-		appendCriterion(type, val, id_list)
-		$("button[name='SubmitSelector']").prop("disabled",false);
-	}
-
-	// type in ('word', 'tag')
+	/*
+	Add search data to the search criteria, and add it to a hidden element
+	holding the search data that is a hold-over from Zeke Hunter-Green's version
+	of the Corpus interface.
+	*/
 	function appendCriterion(type, val, id_list){
 		searchCriteria.push({
 			type: type,
@@ -146,6 +143,12 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 		$('#searchCriteria').val(JSON.stringify(searchCriteria));
 	}
 
+	/*
+	If the user marks the 'select all' option in a POS check list, each element
+	is toggled so that checkAll is selected, each element is also selected.
+	If checkAll is deselected, each element is also deselected, or left alone
+	if they are already deselected.
+	*/
 	function selectAll(form) {
 		if ($("input[name^='" + form + "_checkAll']").is(':checked')) {
 			$("input[name^='" + form + "_selector_checked']").each(function() {
@@ -207,6 +210,8 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	Event listeners for components in this view.
 	*/
 	$(document).ready(function() {
+
+		// user enters word in left box
 		$("#word1").on("keydown paste", function() {
 			if (progressTimeout) {
 				clearTimeout(progressTimeout);
@@ -214,6 +219,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			progressTimeout = setTimeout(getWordPosTags, 500, "#word1", "#DynamicField1");
 		});
 
+		// user enters word in right box
 		$("#word2").on("keydown paste", function() {
 			if (progressTimeout) {
 				clearTimeout(progressTimeout);
@@ -221,6 +227,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			progressTimeout = setTimeout(getWordPosTags, 500, "#word2", "#DynamicField2");
 		});
 
+		// user hits the "search" button, display corpus search results
 		$("#SubmitSearchForm").submit(function(e){
 			e.preventDefault();
 
