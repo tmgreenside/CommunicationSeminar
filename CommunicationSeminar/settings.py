@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_select2',
+    'django_smoke_tests',
 ]
 
 MIDDLEWARE = [
@@ -105,7 +106,7 @@ else:
             'PORT': '3306',
             'NAME': 'CommunicationSeminarDjango',
             'USER': 'root',
-            'PASSWORD': 'Ravenclaw77#',
+            'PASSWORD': '2017%ComSem',
         }
     }
 
