@@ -113,9 +113,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	var searchCriteria = [];
 
 	function collectData(posTableWord) {
-		alert("Starting collect data function");
-		var type = $('#search_type').val() // left off here, need to do this for both checklists
-		alert("Type recognized");
+		var type = $('#search_type').val()
 		var id_list = [];
 		var val = posTableWord;
 
@@ -124,8 +122,6 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				id_list.push($(this).val());
 			}
 		});
-
-		alert("Got past checking the checklist things");
 
 		buildSearchQueryRow(type, val, id_list);
 	}
@@ -148,6 +144,18 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			id_list: id_list,
 		});
 		$('#searchCriteria').val(JSON.stringify(searchCriteria));
+	}
+
+	function selectAll(form) {
+		if ($("input[name^='" + form + "_checkAll']").is(':checked')) {
+			$("input[name^='" + form + "_selector_checked']").each(function() {
+				$(this).prop('checked', true);
+			});
+		} else {
+			$("input[name^='" + form + "_selector_checked']").each(function() {
+				$(this).prop('checked', false);
+			});
+		}
 	}
 
 	/*
@@ -187,7 +195,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				$(resultField).html(data);
 			},
 			fail: function(xhr, textStatus, errorThrown) {
-				alert("Failed");
+				alert("Search Failed");
 			}
 		});
 	}
@@ -220,15 +228,11 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			$(this).prop("disabled",true);
 
 			if ($("#word1").val() !== "") {
-				alert("Going to collect word1 data");
 				collectData($("#word1").val());
-				alert("Collected data on word 1");
 			} else {
 				$(this).prop("disabled",false);
 				return;
 			}
-
-			alert("Collected data on word 1 without the else");
 
 			if ($("#word2").val() !== "") {
 				collectData($("#word2").val());
@@ -240,8 +244,6 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			}
 			$('#searchResults').show().html("<div class='row float-middle'>Loading...</div>").load("{% url 'corpus:search_results' %}", data );
 			$(this).prop("disabled",false);
-
-			alert("Complete");
 		});
 	});
 
