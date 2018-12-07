@@ -13,13 +13,19 @@ from django.views.generic.edit import CreateView, UpdateView, FormView, DeleteVi
 from django.views import View
 
 from django.core.mail import send_mail
+from django.core.validators import validate_email
 from django.contrib import messages
+import csv
+import io
+
 
 
 from ComSemApp.models import *
 from django.contrib.auth.models import User
 from ComSemApp.administrator.forms import CourseForm, CourseTypeForm, SessionForm, SessionTypeForm, TeacherForm, StudentForm, UserForm
 from ComSemApp.libs.mixins import RoleViewMixin
+from django.core.exceptions import ValidationError
+
 
 
 class AdminViewMixin(RoleViewMixin):
@@ -53,9 +59,118 @@ class TeacherListView(AdminViewMixin, ListView):
 class StudentListView(AdminViewMixin, ListView):
     model = Student
     template_name = 'ComSemApp/admin/student_list.html'
+    success_url = reverse_lazy("administrator:students")
+    errors= ["bobo"]
+
+    def _send_email(self, user, password):
+        print("EMAIL SENT")
+        link = "https://www.comsem.net"
+        message = ("You have been invited to join Communication Seminar by an administrator for " + self.institution.name + ".\n"
+                    "In order to log in, go to " + link + " and use \n"
+                    "\tusername: " + user.username + "\n\tpassword: " + password + "\n"
+                    "from there you can change your password.")
+
+        send_mail(
+            'Invitation to Communication Seminar',
+            message,
+            'signup@comsem.net',
+            [user.email],
+            fail_silently=False,
+        )
+
+    def db_get_or_create_institution(self, **kwargs):
+        if self.institution:
+            return self.institution
+
+        defaults = {
+            "name": "Institution Name",
+            "city": "Spokane",
+            "state_province": "WA",
+            "country": "USA",
+        }
+        self.institution = Institution.objects.create(**defaults)
+        return self.institution
+
+    def db_create_user(self, **kwargs):
+        user = User.objects.create(**kwargs)
+        password = User.objects.make_random_password()
+        print("password")
+        print(password)
+        user.set_password(password)
+        user.save()
+        self._send_email(user, password)
+        return user
+
+    def db_create_student(self, **kwargs):
+        institution = self.db_get_or_create_institution()
+        user = self.db_create_user(**kwargs)
+        return Student.objects.create(user=user, institution=institution)
+
+    #handle CSV upload
+    def post(self, request, *args, **kwargs):
+
+        csv_file = request.FILES['file']
+        file_data = csv_file.read().decode("utf-8")	
+        lines = file_data.split("\n")
+        rejectedLines = []
+        message_content = ["The Following users were not added"]
+        
+        for line in lines:
+            count = 2
+            if len(line): #make sure line isnt empy
+                print("NEW LINE")
+                fields = line.split(",")
+                dupeUser = False
+                if (fields[0] == "" or fields[0] == ""):
+                    #end of file
+                    break
+                if (fields[0].isalpha() == False or fields[1].isalpha() == False):
+                    print("invalid name")
+                    message = ( fields[0] + " " + fields[1] + " " + fields[2] + "    invalid first or last name ")
+                    message_content.append(message)
+                    break
+                if (validate_email(fields[2]) == False):
+                    print("email invalid")
+                    message = ( fields[0] + " " + fields[1] + " " + fields[2] + "    invalid email ")
+                    message_content.append(message)
+                    break
+                pattern = re.compile("^([A-Z][0-9]+)+$")
+                pattern.match(string)
+                for user in Student.objects.filter(institution=self.institution):
+                    if(user.user.username== fields[2]):
+                        dupeUser = True
+                        print(user.user)
+                        print("DUPE USER")
+                        message = ( fields[0] + " " + fields[1] + " " + fields[2] + "    Duplicate Username ")
+                        message_content.append(message)
+                        break
+                if (dupeUser == True):
+                    #end of file
+                    rejectedLines.append(fields)
+                    break
+                user = {
+                    "first_name": fields[0],
+                    "last_name": fields[1],
+                    "email": fields[2],
+                    "username": fields[2]
+                }
+                print(fields)
+                print(fields[0])
+                print(fields[1])
+                self.db_create_student(**user)
+                print("student made")
+                print(user)
+        print("REJECTED LINES")
+        print(rejectedLines)
+        messages.add_message(request, messages.ERROR, message_content)
+        return HttpResponseRedirect(self.success_url)
+            
 
     def get_queryset(self):
+        
         return Student.objects.filter(institution=self.institution)
+
+    
 
 
 class CourseListView(AdminViewMixin, ListView):
@@ -106,6 +221,7 @@ class UserMixin(AdminViewMixin, FormView):
         return self.render_to_response(self.get_context_data(form=user_form, obj_form=obj_form))
 
     def _send_email(self, user, password):
+        print("EMAIL SENT")
         link = "https://www.comsem.net"
         message = ("You have been invited to join Communication Seminar by an administrator for " + self.institution.name + ".\n"
                     "In order to log in, go to " + link + " and use \n"
@@ -133,7 +249,6 @@ class UserCreateMixin(UserMixin):
     def post(self, request, *args, **kwargs):
         user_form = UserForm(self.request.POST, prefix='user_form')
         obj_form = self.get_obj_form()
-
         if user_form.is_valid() and obj_form.is_valid():
             # create the user object with random password
             user = user_form.save()
