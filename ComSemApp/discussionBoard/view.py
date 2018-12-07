@@ -17,6 +17,7 @@ from ComSemApp.teacher import constants as teacher_constants
 from ComSemApp.models import *
 from ComSemApp.libs.mixins import RoleViewMixin, CourseViewMixin, WorksheetViewMixin, SubmissionViewMixin
 
+#This class is what deals with the topics page, it calls from the topic database and #returns all the topics from the database. It will then use the topic_list html page #from the templates folder to make it appear on the page
 
 class TopicListView(ListView):
     # discussion board topic page
