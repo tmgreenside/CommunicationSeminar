@@ -116,6 +116,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 
 	// Adds each checked word / POS tag pair to the search criteria
 	function collectData(posTableWord) {
+
 		var type = $('#search_type').val()
 		var id_list = [];
 		var val = posTableWord;
@@ -196,6 +197,8 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			success: function(data){
 
 				$(resultField).html(data);
+
+				// make the "select all" checked by default
 			},
 			fail: function(xhr, textStatus, errorThrown) {
 				alert("Search Failed");
@@ -230,6 +233,8 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 		// user hits the "search" button, display corpus search results
 		$("#SubmitSearchForm").submit(function(e){
 			e.preventDefault();
+
+			searchCriteria = [];
 
 			// Working on adapting this for the result table
 			$(this).prop("disabled",true);
