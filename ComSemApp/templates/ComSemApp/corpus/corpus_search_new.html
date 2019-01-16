@@ -118,11 +118,27 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	// Adds each checked word / POS tag pair to the search criteria
 	function collectData(posTableWord) {
 
-		var type = $('#search_type').val()
+		var type = "word";
 		var id_list = [];
 		var val = posTableWord;
 
 		$("input[name^='" + posTableWord + "_selector_checked']").each(function() {
+			if ($(this).is(':checked')) {
+				id_list.push($(this).val());
+			}
+		});
+
+		appendCriterion(type, val, id_list);
+	}
+
+	// Adds each selected POS tag with no accompanying word to the
+	// search criteria.
+	function collectTags() {
+		var type = "tag";
+		var id_list = [];
+		var val = ""; // !!!!!!! LEFT OFF HERE
+
+		$("input[name^='tag_selector_checked']").each(function() {
 			if ($(this).is(':checked')) {
 				id_list.push($(this).val());
 			}
@@ -259,6 +275,8 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 
 			if ($("#word2").val() !== "") {
 				collectData($("#word2").val());
+			} else {
+				collectTags();
 			}
 
 			var data = {
