@@ -68,7 +68,8 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 		<br>
 		<div class="row">
 			<div class="col-12 nicescroll" id="DynamicField2" name="DynamicField2">
-				<p>Please enter a word.</p>
+				<!-- <p>Please enter a word.</p> -->
+
 			</div>
         </div>
 	</div>
@@ -179,9 +180,15 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 		var val = $(wordEntryField).val();
 		var type = 'word';
 		if (val == "") { // user enters nothing, clear field and return
-			$(resultField).empty();
-			$(resultField).html("<p>Please enter a word.</p>");
-			return;
+			if (resultField == "#DynamicField2") {
+				val = "ALL";
+				type = 'tag';
+			}
+			else {
+				$(resultField).empty();
+				$(resultField).html("<p>Please enter a word.</p>");
+				return;
+			}
 		}
 
 		$(resultField).empty(); // clear the result field, prep for new results
@@ -213,6 +220,10 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	Event listeners for components in this view.
 	*/
 	$(document).ready(function() {
+
+		// By default, a table with all possible tags will be shown when the
+		// page is loaded.
+		$(window).on("load", getWordPosTags("#word2", "#DynamicField2"));
 
 		// user enters word in left box
 		$("#word1").on("keydown paste", function() {

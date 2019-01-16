@@ -23,13 +23,16 @@ def corpus_search(request):
 
 @login_required
 def populate_word_tag(request):
-    val = request.POST.get('val', None)
+    val = request.POST.get('val', None).lstrip(' ').rstrip(' ')
     search_type = request.POST.get('type', None)
     output = request.POST.get('output', None)
+
+    print("Value:", val)
 
     context = {}
     id_list = []
     if(search_type == 'word'):
+        print("Search type is word")
         template = loader.get_template('ComSemApp/corpus/word_table.html')
         words = Word.objects.filter(form=val)
         context = {'val': val, 'words': words} # for html
@@ -39,8 +42,10 @@ def populate_word_tag(request):
         json_response = {'val': val, 'id_list': id_list} # for json
 
     else:
+        print("Search type is tag")
         template = loader.get_template('ComSemApp/corpus/tag_table.html')
         if val == "ALL":
+            print("We have a request for ALL tags")
             tags = Tag.objects.all()
         else:
             tags = Tag.objects.filter(tag=val)
