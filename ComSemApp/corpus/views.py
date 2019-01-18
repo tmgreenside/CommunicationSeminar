@@ -65,7 +65,9 @@ def search_results(request):
     sequential_search = request.POST.get('searchType') == '1'
     search_criteria = request.POST.get('searchCriteria', None)
 
-    if not search_criteria:
+    if search_criteria:
+        print("Search criteria:", search_criteria)
+    if not search_criteria or search_criteria == "":
         return HttpResponse('No search criteria provided', status=401)
 
     search_criteria = json.loads(search_criteria)

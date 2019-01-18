@@ -59,14 +59,14 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			<input type="text" class="form-control input-sm" id="word2" name="word2" placeholder="Type another word (optional)">
 		</div>
 		<div class="row">
-			<div class="col-sm-12 col-md-6">
+			<div class="col-sm-12 col-md-6" >
 				<h4 class="m-b-10 header-title">
 					Selector
 				</h4>
 			</div>
 		</div>
 		<br>
-		<div class="row">
+		<div class="row" style="max-height: 310px; overflow-y: scroll;">
 			<div class="col-12 nicescroll" id="DynamicField2" name="DynamicField2">
 				<!-- <p>Please enter a word.</p> -->
 
@@ -136,7 +136,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	function collectTags() {
 		var type = "tag";
 		var id_list = [];
-		var val = ""; // !!!!!!! LEFT OFF HERE
+		var val = "word2Tags";
 
 		$("input[name^='tag_selector_checked']").each(function() {
 			if ($(this).is(':checked')) {
@@ -144,7 +144,9 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			}
 		});
 
-		appendCriterion(type, val, id_list);
+		if (id_list.length > 0) {
+			appendCriterion(type, val, id_list);
+		}
 	}
 
 	/*
@@ -184,13 +186,14 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	*/
 	function updateTextInput(val) {
 		document.getElementById('textInput').value=val; // Maybe change to "none" if val is 0?
-	}
+	};
 
 	/*
 	This function takes a word entry field and the field to outout Ajax results,
 	sends the word to the backend to retrieve tags for it, and populates a
 	field with check boxes for each retruned POS tag.
 	*/
+
 	function getWordPosTags(wordEntryField, resultField) {
 
 		var val = $(wordEntryField).val();
@@ -218,10 +221,9 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			},
 
 			success: function(data){
-
 				$(resultField).html(data);
-
-				// make the "select all" checked by default
+				$('#' + val + '_checkAll').prop( "checked", true );
+				selectAll(val);
 			},
 			fail: function(xhr, textStatus, errorThrown) {
 				alert("Search Failed");
