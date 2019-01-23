@@ -19,7 +19,7 @@ from ComSemApp.models import *
 def corpus_search(request):
     tags = Tag.objects.all()
     template = loader.get_template('ComSemApp/corpus/corpus_search_new.html')
-    return HttpResponse(template.render({'tags': tags, 'offsetRange':[i for i in range(-8,8)]}, request))
+    return HttpResponse(template.render({'tags': tags, 'offsetRange':[i for i in range(-8,8+1)]}, request))
 
 @login_required
 def populate_word_tag(request):
@@ -148,7 +148,8 @@ def build_query(i, search_criteria, sequential_search):
                 next_position = 1
 
                 # if the next search criteria is an offset, we'll use it here then skip it in the next call.
-                if search_criteria[i-1]['type'] == 'offset' and str(search_criteria[i-1]['type']['val']).isdigit():
+                if search_criteria[i-1]['type'] == 'offset':
+                    print("Handling offset")
                     next_position += search_criteria[i-1]['val']
 
                 query += "AND SW.position = (Derived" + str(i) + ".position + " + str(next_position) + ") "
