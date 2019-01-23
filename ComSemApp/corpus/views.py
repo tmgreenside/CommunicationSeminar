@@ -65,6 +65,8 @@ def search_results(request):
     sequential_search = request.POST.get('searchType') == '1'
     search_criteria = request.POST.get('searchCriteria', None)
 
+    print("Sequential search:", sequential_search)
+
     if search_criteria:
         print("Search criteria:", search_criteria)
     if not search_criteria or search_criteria == "":
@@ -134,15 +136,19 @@ def build_query(i, search_criteria, sequential_search):
 
         if criteria_type == "tag":
             query += " SW.word_id = W.id AND W.tag_id in (" + ','.join([str(id) for id in id_list]) + ") "
-        else:
+
+        elif criteria_type == "word":
             query += " SW.word_id in (" + ','.join([str(id) for id in id_list]) + ") "
+
+        else:
+            query += " '1' = '1' " # hacky way to prevent error when building query
 
         if i > 0:
             if sequential_search:
                 next_position = 1
 
                 # if the next search criteria is an offset, we'll use it here then skip it in the next call.
-                if search_criteria[i-1]['type'] == 'offset':
+                if search_criteria[i-1]['type'] == 'offset' and str(search_criteria[i-1]['type']['val']).isdigit():
                     next_position += search_criteria[i-1]['val']
 
                 query += "AND SW.position = (Derived" + str(i) + ".position + " + str(next_position) + ") "
