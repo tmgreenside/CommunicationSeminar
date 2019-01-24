@@ -32,7 +32,6 @@ def populate_word_tag(request):
     context = {}
     id_list = []
     if(search_type == 'word'):
-        print("Search type is word")
         template = loader.get_template('ComSemApp/corpus/word_table.html')
         words = Word.objects.filter(form=val)
         context = {'val': val, 'words': words} # for html
@@ -42,10 +41,8 @@ def populate_word_tag(request):
         json_response = {'val': val, 'id_list': id_list} # for json
 
     else:
-        print("Search type is tag")
         template = loader.get_template('ComSemApp/corpus/tag_table.html')
         if val == "ALL":
-            print("We have a request for ALL tags")
             tags = Tag.objects.all()
         else:
             tags = Tag.objects.filter(tag=val)
@@ -65,17 +62,15 @@ def search_results(request):
     sequential_search = request.POST.get('searchType') == '1'
     search_criteria = request.POST.get('searchCriteria', None)
 
-    print("Sequential search:", sequential_search)
-
-    if search_criteria:
-        print("Search criteria:", search_criteria)
     if not search_criteria or search_criteria == "":
         return HttpResponse('No search criteria provided', status=401)
 
     search_criteria = json.loads(search_criteria)
 
-    query = build_query(len(search_criteria) - 1, search_criteria, sequential_search)
-    print("Query:", query)
+    query = build_query(len(search_criteria) - 1, search_criteria, False)
+
+    print(query)
+
     with connection.cursor() as cursor:
         expression_ids = []
         cursor.execute(query)
@@ -84,6 +79,27 @@ def search_results(request):
 
     # grab the information we want about the expressions
     expressions = Expression.objects.filter(id__in=expression_ids)
+
+    # Assumption: search criteria with sequential will always be of form
+    # word1 offset word2
+    if sequential_search == True:
+
+        expressionsOut = []
+
+        word1 = str(search_criteria[0]['val']).lower()
+        offset = int(search_criteria[1]['val'])
+        word2 = str(search_criteria[2]['val']).lower()
+        for item in expressions:
+            expression = str(item).lower()
+            words = expression.split()
+            print(words)
+            for i in range(len(words)):
+                if word1 in words[i]:
+                    if (offset > 0 and (len(words) - i) > offset) or (offset < 0 and abs(offset) <= i):
+                        if word2 in words[i+offset]:
+                            print(expression)
+                            expressionsOut.append(item)
+        expressions = expressionsOut
 
     # for each expression, retag in order to show where the matching word / tag is.
     # TODO
@@ -134,10 +150,10 @@ def build_query(i, search_criteria, sequential_search):
 
         query += " WHERE "
 
-        if criteria_type == "tag":
+        if criteria_type == "tag" and len(id_list) > 0:
             query += " SW.word_id = W.id AND W.tag_id in (" + ','.join([str(id) for id in id_list]) + ") "
 
-        elif criteria_type == "word":
+        elif criteria_type == "word" and len(id_list) > 0:
             query += " SW.word_id in (" + ','.join([str(id) for id in id_list]) + ") "
 
         else:

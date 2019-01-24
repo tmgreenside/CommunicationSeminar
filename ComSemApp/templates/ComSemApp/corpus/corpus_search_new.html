@@ -222,8 +222,8 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 
 			success: function(data){
 				$(resultField).html(data);
-				$('#' + val + '_checkAll').prop( "checked", true );
-				selectAll(val);
+				$('#' + val.toLowerCase() + '_checkAll').prop( "checked", true );
+				selectAll(val.toLowerCase());
 			},
 			fail: function(xhr, textStatus, errorThrown) {
 				alert("Search Failed");
@@ -259,7 +259,9 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 			progressTimeout = setTimeout(getWordPosTags, 500, "#word2", "#DynamicField2");
 		});
 
-		// user hits the "search" button, display corpus search results
+		// user hits the "search" button, display corpus search results.
+		// For compatibility, the criteria must be of the form "word1 offset
+		// word2"
 		$("#SubmitSearchForm").submit(function(e){
 			e.preventDefault();
 
