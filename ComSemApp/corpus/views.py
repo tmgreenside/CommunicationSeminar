@@ -83,23 +83,26 @@ def search_results(request):
     # Assumption: search criteria with sequential will always be of form
     # word1 offset word2
     if sequential_search == True:
+        if search_criteria[2]['type'] == "word":
+            expressionsOut = []
 
-        expressionsOut = []
-
-        word1 = str(search_criteria[0]['val']).lower()
-        offset = int(search_criteria[1]['val'])
-        word2 = str(search_criteria[2]['val']).lower()
-        for item in expressions:
-            expression = str(item).lower()
-            words = expression.split()
-            print(words)
-            for i in range(len(words)):
-                if word1 in words[i]:
-                    if (offset > 0 and (len(words) - i) > offset) or (offset < 0 and abs(offset) <= i):
-                        if word2 in words[i+offset]:
-                            print(expression)
-                            expressionsOut.append(item)
-        expressions = expressionsOut
+            word1 = str(search_criteria[0]['val']).lower()
+            offset = int(search_criteria[1]['val'])
+            word2 = str(search_criteria[2]['val']).lower()
+            for item in expressions:
+                expression = str(item).lower()
+                words = expression.split()
+                print(words)
+                for i in range(len(words)):
+                    if word1 in words[i]:
+                        if (offset > 0 and (len(words) - i) > offset) or (offset < 0 and abs(offset) <= i):
+                            if word2 in words[i+offset]:
+                                print(expression)
+                                expressionsOut.append(item)
+            expressions = expressionsOut
+        elif search_criteria[2]['type'] == "tag":
+            print("For sequential with tag, waiting on getting word tag pairings")
+            pass
 
     # for each expression, retag in order to show where the matching word / tag is.
     # TODO
