@@ -67,7 +67,7 @@ def search_results(request):
 
     search_criteria = json.loads(search_criteria)
 
-    query = build_query(len(search_criteria) - 1, search_criteria, False)
+    query = build_query(len(search_criteria) - 1, search_criteria, sequential_search)
 
     print(query)
 
@@ -79,44 +79,6 @@ def search_results(request):
 
     # grab the information we want about the expressions
     expressions = Expression.objects.filter(id__in=expression_ids)
-
-    # Assumption: search criteria with sequential will always be of form
-    # word1 offset word2
-    if sequential_search == True:
-        if search_criteria[2]['type'] == "word":
-            expressionsOut = []
-
-            word1 = str(search_criteria[0]['val']).lower()
-            offset = int(search_criteria[1]['val'])
-            word2 = str(search_criteria[2]['val']).lower()
-            for item in expressions:
-                expression = str(item).lower()
-                words = expression.split()
-                print(words)
-                for i in range(len(words)):
-                    if word1 in words[i]:
-                        if (offset > 0 and (len(words) - i) > offset) or (offset < 0 and abs(offset) <= i):
-                            if word2 in words[i+offset]:
-                                print(expression)
-                                expressionsOut.append(item)
-            expressions = expressionsOut
-        elif search_criteria[2]['type'] == "tag":
-            print("For sequential with tag, waiting on getting word tag pairings")
-            pass
-
-    # for each expression, retag in order to show where the matching word / tag is.
-    # TODO
-    # for expression in expressions:
-    #     tokens = nltk.word_tokenize(expression.expression)
-    #     tagged = nltk.pos_tag(tokens)
-    #     print (tagged)
-    #     for criterion in search_criteria:
-    #         print (criterion)
-    #         if criterion['type'] == 'tag':
-    #             tag = criterion['val']
-    #             for word in tagged:
-    #                 if word[1] == tag:
-    #                     print ("match")
 
     context = {
         'expressions': expressions,
@@ -164,14 +126,13 @@ def build_query(i, search_criteria, sequential_search):
 
         if i > 0:
             if sequential_search:
-                next_position = 1
+                next_position = 0
 
                 # if the next search criteria is an offset, we'll use it here then skip it in the next call.
                 if search_criteria[i-1]['type'] == 'offset':
-                    print("Handling offset")
                     next_position += search_criteria[i-1]['val']
 
-                query += "AND SW.position = (Derived" + str(i) + ".position + " + str(next_position) + ") "
+                query += "AND SW.position <= (Derived" + str(i) + ".position + " + str(next_position) + ") "
 
             query += "AND SW.expression_id = Derived" + str(i) + ".expression_id "
         return query
