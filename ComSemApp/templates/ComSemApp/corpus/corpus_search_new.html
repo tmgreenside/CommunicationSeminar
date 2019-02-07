@@ -295,7 +295,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				'searchType': sequential_search,
 			}
 			$('#searchResults').show().html("<div class='row float-middle'>Loading...</div>").load("{% url 'corpus:search_results' %}", data, function() {
-				alert($('#searchResults').html());
+				// alert($('#searchResults').html());
 
 			} );
 			$(this).prop("disabled",false);
