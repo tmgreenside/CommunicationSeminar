@@ -80,6 +80,11 @@ def search_results(request):
     # grab the information we want about the expressions
     expressions = Expression.objects.filter(id__in=expression_ids)
 
+    # for expression in expressions:
+    #     phrase = expression.expression
+    #     expression.expression = phrase.replace(search_criteria[0]['val'], "<i>" + search_criteria[0]['val'] + "</i>")
+
+
     context = {
         'expressions': expressions,
         'sequential_search': sequential_search,
@@ -132,7 +137,10 @@ def build_query(i, search_criteria, sequential_search):
                 if search_criteria[i-1]['type'] == 'offset':
                     next_position += search_criteria[i-1]['val']
 
-                query += "AND SW.position <= (Derived" + str(i) + ".position + " + str(next_position) + ") "
+                if next_position > 0:
+                    query += "AND SW.position <= (Derived" + str(i) + ".position + " + str(next_position) + ") "
+                elif next_position < 0:
+                    query += "AND Derived" + str(i) + ".position <= (SW.position + " + str(abs(next_position)) + ") "
 
             query += "AND SW.expression_id = Derived" + str(i) + ".expression_id "
-        return query
+    return query
