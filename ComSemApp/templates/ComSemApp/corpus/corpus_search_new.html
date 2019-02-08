@@ -163,6 +163,14 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	}
 
 	/*
+	This function traverses a string and, if the word is found, adds highlight
+	tags on either side of the word, then returns the altered string.
+	*/
+	function isolateAndHighlight(item, word) {
+
+	}
+
+	/*
 	If the user marks the 'select all' option in a POS check list, each element
 	is toggled so that checkAll is selected, each element is also selected.
 	If checkAll is deselected, each element is also deselected, or left alone
@@ -192,7 +200,6 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	sends the word to the backend to retrieve tags for it, and populates a
 	field with check boxes for each retruned POS tag.
 	*/
-
 	function getWordPosTags(wordEntryField, resultField) {
 
 		var val = $(wordEntryField).val();
@@ -294,9 +301,27 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				'searchCriteria': $('#searchCriteria').val(),
 				'searchType': sequential_search,
 			}
-			$('#searchResults').show().html("<div class='row float-middle'>Loading...</div>").load("{% url 'corpus:search_results' %}", data, function() {
-				// alert($('#searchResults').html());
-
+			$('#searchResults').show().html("<div class='row float-middle'>Loading...</div>").load("{% url 'corpus:search_results' %}", data, function(response, status, xhr) {
+				var substrings = response.split(" ");
+				var result = "";
+				var word1 = $('#word1').val().toLowerCase();
+				var word2 = $('#word2').val().toLowerCase();
+				alert(word1);
+				alert("Starting parser");
+				for (var item in substrings) {
+					if (substrings[item].toLowerCase().includes(word1)) {
+						result = result.concat(isolateAndHighlight(item, word));
+						// LEFT OFF HERE
+					}
+					else if (word2 !== "" && substrings[item].toLowerCase().contains(word2)) {
+						result = result.concat("<i>" + substrings[item] + "</i>");
+					} else {
+						result = result.concat(substrings[item]);
+					}
+				}
+				// alert(result);
+				// $('#searchResults').html(result);
+				// alert("Done highlighting");
 			} );
 			$(this).prop("disabled",false);
 		});

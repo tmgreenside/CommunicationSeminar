@@ -67,7 +67,6 @@ def search_results(request):
 
     search_criteria = json.loads(search_criteria)
 
-    # query = build_query(len(search_criteria) - 1, search_criteria, sequential_search)
     query = build_query(search_criteria, sequential_search)
 
     print(query)
@@ -136,55 +135,3 @@ def build_query(search_criteria, sequential_search):
         query += " and SW.position <= (derived2.position + " + str(abs(offset)) + ") and derived2.position < SW.position"
 
     return query
-
-
-# work backwards through the search criteria - we make n - 1 joins (where n = number of search criteria) with n tables that
-# select expression ID and position (if sequential search).
-# def build_query(i, search_criteria, sequential_search):
-#     current_criteria = search_criteria[i]
-#     criteria_type = current_criteria['type']
-#     val = current_criteria['val']
-#     id_list = current_criteria['id_list']
-#
-#     # if val isnt valid, id_list isn't a list of int ...
-#
-#     if i < 0:
-#         return ""
-#     else:
-#         if(criteria_type == "offset"):
-#             print ("to do")
-#
-#         select_position = ", SW.Position" if sequential_search else ""
-#         from_words = ", ComSemApp_word as W " if criteria_type == "tag" else ""
-#
-#         query = "SELECT SW.expression_id" + select_position + " FROM ComSemApp_sequentialwords AS SW" + from_words
-#
-#         if i > 0:
-#             query += ", (" + build_query(i - 1, search_criteria, sequential_search) + ") as Derived" + str(i)
-#
-#         query += " WHERE "
-#
-#         if criteria_type == "tag" and len(id_list) > 0:
-#             query += " SW.word_id = W.id AND W.tag_id in (" + ','.join([str(id) for id in id_list]) + ") "
-#
-#         elif criteria_type == "word" and len(id_list) > 0:
-#             query += " SW.word_id in (" + ','.join([str(id) for id in id_list]) + ") "
-#
-#         else:
-#             query += " '1' = '1' " # hacky way to prevent error when building query
-#
-#         if i > 0:
-#             if sequential_search:
-#                 next_position = 0
-#
-#                 # if the next search criteria is an offset, we'll use it here then skip it in the next call.
-#                 if search_criteria[i-1]['type'] == 'offset':
-#                     next_position += search_criteria[i-1]['val']
-#
-#                 if next_position > 0:
-#                     query += "AND SW.position <= (Derived" + str(i) + ".position + " + str(next_position) + ") "
-#                 elif next_position < 0:
-#                     query += "AND Derived" + str(i) + ".position <= (SW.position + " + str(abs(next_position)) + ") "
-#
-#             query += "AND SW.expression_id = Derived" + str(i) + ".expression_id "
-#         return query
