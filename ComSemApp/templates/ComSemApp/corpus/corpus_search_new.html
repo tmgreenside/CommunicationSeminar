@@ -163,26 +163,6 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	}
 
 	/*
-	This function traverses a string and, if the word is found, adds highlight
-	tags on either side of the word, then returns the altered string.
-	*/
-	function isolateAndHighlight(item, word) {
-		for (var i = 0; i < item.length - word.length; i++) {
-			if (item.substring(i, i+word.length).toLowerCase() === word.toLowerCase()) {
-				if (i > 0 && !item.substring(i-1, i).toLowerCase().match(/[a-z]/i)) {
-					return item;
-				}
-				else if ((i + word.length) < (item.length - 1) && !item.substring((i + word.length)-1, (i + word.length)).toLowerCase().match(/[a-z]/i)) {
-					return item;
-				}
-				newItem = [item.slice(0, i), "<i>", item.slice(i, i+word.length), "</i>", item.slice(i+word.length)].join('');
-				return newItem;
-			}
-		}
-		return item;
-	}
-
-	/*
 	If the user marks the 'select all' option in a POS check list, each element
 	is toggled so that checkAll is selected, each element is also selected.
 	If checkAll is deselected, each element is also deselected, or left alone
@@ -313,24 +293,7 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				'searchCriteria': $('#searchCriteria').val(),
 				'searchType': sequential_search,
 			}
-			$('#searchResults').show().html("<div class='row float-middle'>Loading...</div>").load("{% url 'corpus:search_results' %}", data, function(response, status, xhr) {
-				var substrings = response.split(" ");
-				var result = "";
-				var word1 = $('#word1').val().toLowerCase();
-				var word2 = $('#word2').val().toLowerCase();
-				for (var item in substrings) {
-					if (substrings[item].toLowerCase().includes(word1)) {
-						result = result.concat(isolateAndHighlight(substrings[item], word1) + " ");
-					}
-					else if (word2 !== "" && substrings[item].toLowerCase().includes(word2)) {
-						result = result.concat(isolateAndHighlight(substrings[item], word2) + " ");
-					} else {
-						result = result.concat(substrings[item] + " ");
-					}
-				}
-				$('#searchResults').html(result);
-				alert("Done highlighting");
-			} );
+			$('#searchResults').show().html("<div class='row float-middle'>Loading...</div>").load("{% url 'corpus:search_results' %}", data);
 			$(this).prop("disabled",false);
 		});
 	});

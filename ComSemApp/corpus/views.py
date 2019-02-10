@@ -27,8 +27,6 @@ def populate_word_tag(request):
     search_type = request.POST.get('type', None)
     output = request.POST.get('output', None)
 
-    print("Value:", val)
-
     context = {}
     id_list = []
     if(search_type == 'word'):
@@ -68,9 +66,6 @@ def search_results(request):
     search_criteria = json.loads(search_criteria)
 
     query = build_query(search_criteria, sequential_search)
-
-    print(query)
-    print(search_criteria)
 
     with connection.cursor() as cursor:
         expression_ids = []
