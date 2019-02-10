@@ -167,7 +167,19 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 	tags on either side of the word, then returns the altered string.
 	*/
 	function isolateAndHighlight(item, word) {
-
+		for (var i = 0; i < item.length - word.length; i++) {
+			if (item.substring(i, i+word.length).toLowerCase() === word.toLowerCase()) {
+				if (i > 0 && !item.substring(i-1, i).toLowerCase().match(/[a-z]/i)) {
+					return item;
+				}
+				else if ((i + word.length) < (item.length - 1) && !item.substring((i + word.length)-1, (i + word.length)).toLowerCase().match(/[a-z]/i)) {
+					return item;
+				}
+				newItem = [item.slice(0, i), "<i>", item.slice(i, i+word.length), "</i>", item.slice(i+word.length)].join('');
+				return newItem;
+			}
+		}
+		return item;
 	}
 
 	/*
@@ -306,22 +318,18 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				var result = "";
 				var word1 = $('#word1').val().toLowerCase();
 				var word2 = $('#word2').val().toLowerCase();
-				alert(word1);
-				alert("Starting parser");
 				for (var item in substrings) {
 					if (substrings[item].toLowerCase().includes(word1)) {
-						result = result.concat(isolateAndHighlight(item, word));
-						// LEFT OFF HERE
+						result = result.concat(isolateAndHighlight(substrings[item], word1) + " ");
 					}
-					else if (word2 !== "" && substrings[item].toLowerCase().contains(word2)) {
-						result = result.concat("<i>" + substrings[item] + "</i>");
+					else if (word2 !== "" && substrings[item].toLowerCase().includes(word2)) {
+						result = result.concat(isolateAndHighlight(substrings[item], word2) + " ");
 					} else {
-						result = result.concat(substrings[item]);
+						result = result.concat(substrings[item] + " ");
 					}
 				}
-				// alert(result);
-				// $('#searchResults').html(result);
-				// alert("Done highlighting");
+				$('#searchResults').html(result);
+				alert("Done highlighting");
 			} );
 			$(this).prop("disabled",false);
 		});
