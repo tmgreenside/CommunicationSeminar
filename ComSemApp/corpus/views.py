@@ -124,9 +124,9 @@ def build_query(search_criteria, sequential_search):
     if len(words) > 1 or len(tags) > 0:
         query += " and SW.expression_id = derived2.expression_id"
 
-    if offset > 0:
-        query += " and derived2.position <= (SW.position + " + str(offset) + ") and SW.position < derived2.position"
-    elif offset < 0:
-        query += " and SW.position <= (derived2.position + " + str(abs(offset)) + ") and derived2.position < SW.position"
+        if offset > 0:
+            query += " and derived2.position <= (SW.position + " + str(offset) + ") and SW.position < derived2.position"
+        elif offset < 0:
+            query += " and SW.position <= (derived2.position + " + str(abs(offset)) + ") and derived2.position < SW.position"
 
     return query
