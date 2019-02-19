@@ -116,8 +116,8 @@ class CourseDetailView(TeacherCourseViewMixin, DetailView):
 
         print("ugraded")
         print(ungraded)
-        print("graded")
-        print(graded)
+        print("complete")
+        print(complete)
         print("incomplete")
         print(incomplete)
         data['classungraded'] = ungraded
