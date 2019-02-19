@@ -7,6 +7,11 @@
                 <b>Topic List</b>
             </h4>
         </div>
+        <div class="col-md-6">
+            <a class="btn btn-sm btn-outline-info pull-right" href="{% url 'discussion_board:create_topic' %}">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
     </div>
 
     <div class = "row mt-2">
@@ -16,6 +21,7 @@
                 <tr>
                     <th>Person Posted</th>
                     <th>Topic</th>
+                    <th class="d-xs-none" data-filter="false" data-sorter="false"></th>
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +29,9 @@
                 <tr topic_id = "{{ topic.id }}">
                     <td>{{topic.personPosted}}</td>
                     <td>{{topic.topic}}</td>
+                    <td>
+                        <a href="{% url 'discussion_board:topic' topic.id %}" class="btn btn-sm btn-outline-primary">Go To Thread</a>
+                    </td>
                 </tr>
                 {% endfor %}
                 {% include 'ComSemApp/tablesorter_footer.html' %}

@@ -17,22 +17,34 @@
 			</div>
 
 			<form method="post" enctype="multipart/form-data">{% csrf_token %}
-				<label>Upload File</label>
-				<input type="file" name="file" accept=".csv" >
-				<p>Only Accepts CSV Files</p>
-				<button type="save">Upload</button>
+				<label class="btn btn-sm btn-outline-info pull-left" >
+					<input type="file" name="file" accept=".csv"/>
+				</label>
+				<br>
+				<button class="btn btn-sm btn-outline-info pull-left" type="save">Upload</button>
 			</form>
-
+		</div>
+		<br>
+		<div>
+			<p>Uploader only allows CSV Files.
+			</p>
+			<p>
+				Please order students in the following way: firstname, lastname, email. 
+				Below is an example of how the first line would look, a comma indicates a new column. Names must contain letters only. 
+			</p>
+			<p>
+				John,Doe,johndoe@gmail.com
+			</p>
 		</div>
 
+		<div>
 		{% if messages %}
-			<ul class="alert">
 				{% for message in messages %}
-				<li{% if message.tags %} class="{{ alert }}"{% endif %}>{{ message }}</li>
+				<pre style="color: #98a6ad">{{ message }}</pre>
 				{% endfor %}
-			</ul>
 		{% endif %}
-		
+		</div>
+
 		{% if student_list %}
 		<div class="row mt-3 cs-admin-table">
 			<table class="table table-hover tablesorter">

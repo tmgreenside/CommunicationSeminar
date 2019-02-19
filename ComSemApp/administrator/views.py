@@ -17,6 +17,7 @@ from django.core.validators import validate_email
 from django.contrib import messages
 import csv
 import io
+import re
 
 
 
@@ -108,61 +109,91 @@ class StudentListView(AdminViewMixin, ListView):
 
     #handle CSV upload
     def post(self, request, *args, **kwargs):
-
-        csv_file = request.FILES['file']
-        file_data = csv_file.read().decode("utf-8")	
-        lines = file_data.split("\n")
-        rejectedLines = []
-        message_content = ["The Following users were not added"]
-        
-        for line in lines:
-            count = 2
-            if len(line): #make sure line isnt empy
-                print("NEW LINE")
-                fields = line.split(",")
-                dupeUser = False
-                if (fields[0] == "" or fields[0] == ""):
-                    #end of file
-                    break
-                if (fields[0].isalpha() == False or fields[1].isalpha() == False):
-                    print("invalid name")
-                    message = ( fields[0] + " " + fields[1] + " " + fields[2] + "    invalid first or last name ")
-                    message_content.append(message)
-                    break
-                if (validate_email(fields[2]) == False):
-                    print("email invalid")
-                    message = ( fields[0] + " " + fields[1] + " " + fields[2] + "    invalid email ")
-                    message_content.append(message)
-                    break
-                pattern = re.compile("^([A-Z][0-9]+)+$")
-                pattern.match(string)
-                for user in Student.objects.filter(institution=self.institution):
-                    if(user.user.username== fields[2]):
-                        dupeUser = True
-                        print(user.user)
-                        print("DUPE USER")
-                        message = ( fields[0] + " " + fields[1] + " " + fields[2] + "    Duplicate Username ")
-                        message_content.append(message)
+        if (len(request.FILES) > 0): #check to make sure file was uploaded
+            csv_file = request.FILES['file']
+            file_data = csv_file.read().decode("utf-8")	
+            lines = file_data.split("\n")
+            rejectedLines = []
+            message_content = [""]
+            linecount = 0
+            rejectcount = 0
+            for line in lines:
+                if len(line): #make sure line isnt empty
+                    fields = line.split(",")
+                    okToCreate = True
+                    rejected = False
+                    linecount += 1
+                    if (fields[0] == "" or fields[0] == ""):
+                        #end of file
                         break
-                if (dupeUser == True):
-                    #end of file
-                    rejectedLines.append(fields)
-                    break
-                user = {
-                    "first_name": fields[0],
-                    "last_name": fields[1],
-                    "email": fields[2],
-                    "username": fields[2]
-                }
-                print(fields)
-                print(fields[0])
-                print(fields[1])
-                self.db_create_student(**user)
-                print("student made")
-                print(user)
-        print("REJECTED LINES")
-        print(rejectedLines)
-        messages.add_message(request, messages.ERROR, message_content)
+                    if (len(fields) < 4):
+                        message = "!!! Missing columns, please make sure you have columns as follows: firstname,lastname,email,username"
+                        message_content.append(message)
+                        rejected = True
+                        rejectcount += 1
+                        break
+                    if (fields[0].isalpha() == False or fields[1].isalpha() == False):
+                        message = (str(linecount) + " " + fields[0] + " " + fields[1] + "      " + fields[2] + "       " + fields[3] + "        Invalid First or Last Name \n")
+                        message_content.append(message)
+                        rejectcount += 1
+                        rejected = True
+                        okToCreate = False
+                    for user in Student.objects.filter(institution=self.institution):
+                        if(user.user.email== fields[2]):
+                            okToCreate = False
+                            if (rejected == False):     ##if rejected is false, we need to increment the number of rejects, if its already false, dont increment it but still log error
+                                rejectcount += 1
+                                rejected = True
+                            message = (str(linecount) + " " + fields[0] + " " + fields[1] + "      " + fields[2] + "       " + fields[3] + "        Duplicate Email Address  \n")
+                            message_content.append(message)
+                            
+                        if(user.user.username== fields[3]):
+                            okToCreate = False
+                            if (rejected == False):     ##if rejected is false, we need to increment the number of rejects, if its already false, dont increment it but still log error
+                                rejectcount += 1
+                                rejected = True
+                            message = (str(linecount) + " " + fields[0] + " " + fields[1] + "      " + fields[2] + "       " + fields[3] + "        Duplicate Username  \n")
+                            message_content.append(message)
+                        if(okToCreate == False):
+                            break
+                    
+                    # Check if a valid email address
+                    match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', fields[2].lower())
+
+                    if (match == None):
+                        if(rejected == False):
+                            rejectcount += 1
+                            rejected = True
+                        okToCreate = False 
+                        message = (str(linecount) + " " + fields[0] + " " + fields[1] + "      " + fields[2] + "       " + fields[3] + "        Invalid Email Address  \n")
+                        message_content.append(message)
+
+                    # Check for valid username
+                    usernameCheck = re.match('^[\w.@+-]+$', fields[3])
+                    if (usernameCheck == None):
+                        if(rejected == False):
+                            rejectcount += 1
+                            rejected = True
+                        okToCreate = False 
+                        message = (str(linecount) + " " + fields[0] + " " + fields[1] + "      " + fields[2] + "       " + fields[3] + "        Invalid Username  \n")
+                        message_content.append(message)
+                        
+                    if (okToCreate == True):
+                        user = {
+                            "first_name": fields[0],
+                            "last_name": fields[1],
+                            "email": fields[2],
+                            "username": fields[3]
+                        }
+                        self.db_create_student(**user)
+                        print("student made")
+                        print(user)
+            message_content.insert(0, ("" +  str((linecount - rejectcount)) + "/" + str(linecount)+ " Accounts created sucessfully\n" + "The below users were not added, Their line numbers are listed to the left,\nLines with multiple errors will be listed multiple times \n \n"))
+            print("linecount" + str(linecount))
+            print("rejected lines" + str(rejectcount))
+            message_disp = "".join(message_content)
+            messages.add_message(request, messages.ERROR, message_disp)
+            request.FILES.pop('file', None)
         return HttpResponseRedirect(self.success_url)
             
 
