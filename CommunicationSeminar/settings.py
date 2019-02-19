@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     'comsempython.us-east-2.elasticbeanstalk.com',
     'localhost',
     '.comsem.net',
+    '127.0.0.1',
 ]
 
 # Application definition
@@ -105,7 +106,7 @@ else:
             'PORT': '3306',
             'NAME': 'CommunicationSeminarDjango',
             'USER': 'root',
-            'PASSWORD': '2017%ComSem',
+            'PASSWORD': 'Ravenclaw77#',
         }
     }
 
