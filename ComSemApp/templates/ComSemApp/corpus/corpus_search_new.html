@@ -65,25 +65,27 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				</h4>
 			</div>
 		</div>
-		<div class="row" style="max-height: 310px; overflow-y: scroll;">
+		<div class="row" style="max-height: 400px; overflow-y: scroll;">
 			<div class="col-12 nicescroll" id="DynamicField2" name="DynamicField2">
-				<!-- <p>Please enter a word.</p> -->
 
 			</div>
         </div>
 	</div>
 
-	<div class="col-lg-2">
-		<br>
+	<div class="col-lg-3">
 
 		<!-- submit button -->
 		<button class="btn btn-sm btn-outline-success pull-right" type="submit">
 		    <span>Search <i class="ti-angle-right"></i></span>
 		</button>
+		<br><br>
+		<button class="btn btn-sm btn-outline-success pull-right" name="clearForm" id="clearForm">
+			<span>Clear <i class="ti-angle-left"></i></span>
+		</button>
 
-		<br><br><br>
+		<br><br>
 		<!-- user specifies offset for the corpus search -->
-		<label for="newOffset">Select Offset</label>
+		<label for="newOffset">Select Offset</label><br>
 		<select id="newOffset" name="newOffset">
 			{% for i in offsetRange %}
 				{% if i == 0 %}
@@ -93,6 +95,14 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				{% endif %}
 			{% endfor %}
 		</select>
+		<br><br>
+		<p><b>Offset</b> determines how many spaces away from each other two words
+			can be in a sentence. For example, if you want to see "the" followed
+			by "king," you would set an offset of 1 (or -1 if "king" is entered for
+			the first word).</p>
+		<p>The offset indicates "up to and including," so for an offset value of 4,
+			two words may be shown together between 1 and 4 spaces away. Negative values
+			mean the second word will come first in the sentences.</p>
 	</div>
 
 
@@ -255,6 +265,16 @@ note: Tags are here: http://ucrel.lancs.ac.uk/claws5tags.html
 				clearTimeout(progressTimeout);
 			}
 			progressTimeout = setTimeout(getWordPosTags, 500, "#word2", "#DynamicField2");
+		});
+
+		// User hits the "Clear" button, word entries are set to empty and the
+		// offset is set to "none."
+		$('#clearForm').click(function() {
+			$("#word2").val("");
+			$("#word1").val("");
+			getWordPosTags("#word1", "#DynamicField1");
+			getWordPosTags("#word2", "#DynamicField2");
+			$('#newOffset').val("none");
 		});
 
 		// user hits the "search" button, display corpus search results.
