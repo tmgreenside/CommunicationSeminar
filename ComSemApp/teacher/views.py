@@ -105,6 +105,7 @@ class CourseDetailView(TeacherCourseViewMixin, DetailView):
         ungraded = 0
         complete = 0
         incomplete = 0
+        submissions = StudentSubmission.objects.all()
         for submission in submissions :
             print(submission.status)
             if submission.worksheet.course == self.course:
