@@ -1,0 +1,36 @@
+{% extends 'ComSemApp/sidebar.html' %}
+{% block content %}
+<div class="card-box cs-table-container" style="min-height:600px;">
+    <div class="row">
+        <div class="col-6">
+            <h4 class="m-t-0 header-title">
+                <b>{{topic_description}}</b>
+            </h4>
+        </div>
+    </div>
+    <div class = "row mt-2">
+        {% if replies %}
+        <table class="table table-hover tablesorter">
+            <thead>
+                <tr>
+                    <th>Person Posted</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reply in replies %}
+                <tr reply_id = "{{ reply.id }}">
+                    <td>{{reply.personPosted}}</td>
+                    <td>{{reply.message}}</td>
+                </tr>
+                {% endfor %}
+                {% include 'ComSemApp/tablesorter_footer.html' %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No available replies</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
