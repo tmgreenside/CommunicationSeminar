@@ -114,7 +114,12 @@ class CourseDetailView(TeacherCourseViewMixin, DetailView):
                 if submission.status == 'incomplete':
                     incomplete = incomplete + 1
 
-
+        print("ugraded")
+        print(ungraded)
+        print("graded")
+        print(graded)
+        print("incomplete")
+        print(incomplete)
         data['classungraded'] = ungraded
         data['classincomplete'] = incomplete
         data['classcomplete'] = complete
