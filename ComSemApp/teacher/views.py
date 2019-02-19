@@ -106,7 +106,7 @@ class CourseDetailView(TeacherCourseViewMixin, DetailView):
         complete = 0
         incomplete = 0
         for submission in submissions :
-            print(submission)
+            print(submission.status)
             if submission.worksheet.course == self.course:
                 if submission.status == "ungraded":
                     ungraded = ungraded + 1
