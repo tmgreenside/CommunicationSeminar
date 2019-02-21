@@ -34,6 +34,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '.comsem.net',
     '127.0.0.1',
+    #feel free to remove the below line, allows me to expose localhost to internet
+    'comsem.localhost.run'
 ]
 
 # Application definition
