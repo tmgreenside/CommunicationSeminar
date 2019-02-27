@@ -45,6 +45,11 @@ ALLOWED_HOSTS = [
     'comsem8.localhost.run',
     'comsem9.localhost.run',
     'comsem10.localhost.run',
+    'comsem11.localhost.run',
+    'comsem12.localhost.run',
+    'comsem13.localhost.run',
+    'comsem14.localhost.run',
+    'comsem15.localhost.run',
     'group08.localhost.run'
 ]
 
