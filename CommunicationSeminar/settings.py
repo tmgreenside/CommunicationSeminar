@@ -36,6 +36,15 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     #feel free to remove the below line, allows me to expose localhost to internet
     'comsem.localhost.run',
+    'comsem2.localhost.run',
+    'comsem3.localhost.run',
+    'comsem4.localhost.run',
+    'comsem5.localhost.run',
+    'comsem6.localhost.run',
+    'comsem7.localhost.run',
+    'comsem8.localhost.run',
+    'comsem9.localhost.run',
+    'comsem10.localhost.run',
     'group08.localhost.run'
 ]
 
