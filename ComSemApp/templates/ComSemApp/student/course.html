@@ -164,12 +164,7 @@
 	
 			// Create the data table.
 			var data = new google.visualization.DataTable();
-			var incomplete = {{ classincomplete }};
-			var completed = {{ classcomplete }};
-			var ungraded = {{ classungraded }};
-			console.log("incomplete", incomplete);
-			console.log("completed", completed);
-			console.log("ungraded", ungraded);
+
 			var data = google.visualization.arrayToDataTable([
 			  ['Source', 'Clicks'],
 			  ['Completed', 4],
