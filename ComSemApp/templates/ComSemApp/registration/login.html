@@ -4,14 +4,14 @@
 
 {% block content %}
     <h2>Login</h2>
-    <form method="post">
+    <form id = "test" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button id = "test" type="submit">Login</button>
+        <button  type="submit">Login</button>
     </form>
 
     <ol id="tour" style="display: none;">
-        <li data-target="#test" data-angle="130">
+        <li data-target="test" data-angle="130">
           The first step in the tour
         </li>
       </ol>
