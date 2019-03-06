@@ -69,6 +69,16 @@
     </div>
 </div>
 
+<div id="recordQuickTranscribe">
+    <label>Quick Check Reformulation</label><br>
+    <div class="row" style="align: center">
+        <button id="GoogleTest" style="border-radius:100%; padding: 10px; text-align: center;">
+            <img src="{% static 'ComSemApp/images/google_logo.png' %}" height="40" width="40">
+        </button>
+        <div id="googleTranscription" style="padding:10px"></div>
+    </div>
+    <br><br>
+</div>
 
 <!-- AUDIO RECORDING -->
 <div class="row" id="display_reformulation_audioRow" style="{% if not worksheet.display_reformulation_audio %}display: none{% endif %}">
@@ -95,6 +105,10 @@
 
 
 <script>
+$('#GoogleTest').click(function() {
+    $('#googleTranscription').html("<p>Speak now</p>");
+});
+
 $("#saveAttempt").click(function(e){
     e.preventDefault()
 

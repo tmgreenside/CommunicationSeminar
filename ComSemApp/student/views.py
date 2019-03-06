@@ -17,6 +17,12 @@ from ComSemApp.teacher import constants as teacher_constants
 from ComSemApp.models import *
 from ComSemApp.libs.mixins import RoleViewMixin, CourseViewMixin, WorksheetViewMixin, SubmissionViewMixin
 
+# Imports the Google Cloud client library
+from google.cloud import speech
+from google.cloud.speech import enums
+from google.cloud.speech import types
+
+# googleClient = speech.SpeechClient()
 
 class StudentViewMixin(RoleViewMixin):
 
@@ -193,6 +199,7 @@ class AttemptCreateView(StudentSubmissionViewMixin, CreateView):
         context = super(AttemptCreateView, self).get_context_data(**kwargs)
         # TODO - expression mixin rather than grabbing expression twice ?
         expression_id = self.kwargs.get('expression_id')
+
         expression = get_object_or_404(Expression, id=expression_id, worksheet=self.worksheet)
         context['expression'] = expression
         return context
