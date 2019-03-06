@@ -187,7 +187,7 @@
                     onShow: function() {
                         
                         var $grumble = getCurrentGrumble();
-                        scrollToGrumble($grumble);
+                        //scrollToGrumble($grumble);
                         $grumble.data('clicked', false);
                         
                         $grumble.click(function(ev){
