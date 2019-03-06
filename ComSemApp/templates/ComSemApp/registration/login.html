@@ -9,4 +9,16 @@
         {{ form.as_p }}
         <button id = "test" type="submit">Login</button>
     </form>
+
+    <ol id="tour" style="display: none;">
+        <li data-target="#test" data-angle="130">
+          The first step in the tour
+        </li>
+      </ol>
+
+      <script>
+        $(function(){
+            $('#tour').crumble();
+        });
+        </script>
 {% endblock %}
