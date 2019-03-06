@@ -74,9 +74,21 @@
 			
 				  <script>
 					console.log("here");
-					$(function(){
-						$('#tour').crumble();
-					});
+					$('#tour').crumble({
+						scrollSpeed: 'fast',
+						grumble: {
+							distance: 40
+						},
+						onStep: function(){
+							console.log('you moved forward');
+						},
+							onStart: function(){
+							console.log('you started the tour');
+						},
+							onFinish: function(){
+							console.log('you finished the tour');
+						}
+						});
 			
 					</script>
 
