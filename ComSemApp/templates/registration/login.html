@@ -61,10 +61,24 @@
 					</a>
 				</div>
 				<div class="col-sm-4 text-right">
-					<button class="btn btn-primary btn-custom w-md waves-effect waves-light" type="submit">Log In
+					<button id="test" class="btn btn-primary btn-custom w-md waves-effect waves-light" type="submit">Log In
 					</button>
 				</div>
 			</div>
+
+			<ol id="tour" style="display: none;">
+					<li data-target="#test" data-angle="130">
+					  The first step in the tour
+					</li>
+				  </ol>
+			
+				  <script>
+					console.log("here");
+					$(function(){
+						$('#tour').crumble();
+					});
+			
+					</script>
 
 
 
