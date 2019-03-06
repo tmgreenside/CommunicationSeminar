@@ -74,21 +74,7 @@
 			
 				  <script>
 					console.log("here");
-					$('#tour').Crumble({
-						scrollSpeed: 'fast',
-						grumble: {
-							distance: 40
-						},
-						onStep: function(){
-							console.log('you moved forward');
-						},
-							onStart: function(){
-							console.log('you started the tour');
-						},
-							onFinish: function(){
-							console.log('you finished the tour');
-						}
-						});
+					$('#tour').crumble();
 			
 					</script>
 
