@@ -72,9 +72,12 @@
 <div id="recordQuickTranscribe">
     <label>Quick Check Reformulation</label><br>
     <div class="row" style="align: center">
+        <!-- Hit the button once to start recording, again to stop recording -->
         <button id="GoogleTest" style="border-radius:100%; padding: 10px; text-align: center;">
             <img src="{% static 'ComSemApp/images/google_logo.png' %}" height="40" width="40">
         </button>
+        <audio id="GoogleTestAudio"></audio>
+
         <div id="googleTranscription" style="padding:10px"></div>
     </div>
     <br><br>
