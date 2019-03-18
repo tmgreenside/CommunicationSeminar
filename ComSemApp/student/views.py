@@ -114,6 +114,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             context['gradedCount'] = 0
             context['ungradedCount'] = 0
             context['pendingCount']=0
+            print("here")
             for worksheet in context['worksheets']:
                 print(worksheet.last_submission(student).status)
 
