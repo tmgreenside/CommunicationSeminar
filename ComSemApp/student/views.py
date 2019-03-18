@@ -73,12 +73,21 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         worksheets = self.course.worksheets.filter(status=teacher_constants.WORKSHEET_STATUS_RELEASED)
 
 
-        
+        context['gradedCount'] = 0
+        context['ungradedCount'] = 0
+        context['incompleteCount']=0
 
         # TODO should this logic be in the worksheet model ? -Zeke
         for worksheet in worksheets:
             last_submission = worksheet.last_submission(self.student)
             last_submission_status = last_submission.status if last_submission else "none"
+            if last_submission_status == "incomplete":
+                context['incompleteCount'] += 1
+            if last_submission_status == "complete":
+                context['complete'] += 1
+            if last_submission_status == "ungraded":
+                context['ungraded'] += 1
+
             last_submission_id = last_submission.id if last_submission else 0
             status_colors = {
                 "complete": "success",
@@ -113,15 +122,9 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             worksheet.link_url = link_urls[last_submission_status]
 
 
-        context['worksheets'] = worksheets 
-        context['gradedCount'] = 0
-        context['ungradedCount'] = 0
-        context['pendingCount']=0
-
-        for worksheet in context['worksheets']:
-            print("here")
-            print(worksheet.last_submission(self.student).status)
-
+        print(context['gradedCount'])
+        print(context['ungradedCount'])
+        print(context['incompleteCount'])
 
 
 
