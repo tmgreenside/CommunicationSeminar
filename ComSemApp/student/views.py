@@ -111,16 +111,18 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             worksheet.status_color = status_colors[last_submission_status]
             worksheet.button_text = button_texts[last_submission_status]
             worksheet.link_url = link_urls[last_submission_status]
-            context['gradedCount'] = 0
-            context['ungradedCount'] = 0
-            context['pendingCount']=0
-            print("here")
-            for worksheet in context['worksheets']:
-                print(worksheet.last_submission(student).status)
+
+            
+        context['worksheets'] = worksheets 
+        context['gradedCount'] = 0
+        context['ungradedCount'] = 0
+        context['pendingCount']=0
+        print("here")
+        for worksheet in context['worksheets']:
+            print(worksheet.last_submission(student).status)
 
 
 
-        context['worksheets'] = worksheets
 
         return context
 
