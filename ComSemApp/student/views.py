@@ -82,7 +82,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             last_submission = worksheet.last_submission(self.student)
             last_submission_status = last_submission.status if last_submission else "none"
             if last_submission_status == "incomplete" or last_submission_status == "none":
-                context['incompleteCount'] += 1
+                context['incomplete'] += 1
             if last_submission_status == "complete":
                 context['complete'] += 1
             if last_submission_status == "ungraded":
