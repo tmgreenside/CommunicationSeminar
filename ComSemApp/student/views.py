@@ -71,8 +71,11 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         worksheets = self.course.worksheets.filter(status=teacher_constants.WORKSHEET_STATUS_RELEASED)
+        v bdata = super().get_context_data(**kwargs)
 
-        # TODO should this logic be in the worksheet model ?
+        
+
+        # TODO should this logic be in the worksheet model ? -Zeke
         for worksheet in worksheets:
             last_submission = worksheet.last_submission(self.student)
             last_submission_status = last_submission.status if last_submission else "none"
@@ -108,8 +111,16 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             worksheet.status_color = status_colors[last_submission_status]
             worksheet.button_text = button_texts[last_submission_status]
             worksheet.link_url = link_urls[last_submission_status]
+            context['gradedCount'] = 0
+            context['ungradedCount'] = 0
+            context['pendingCount']=0
+            for worksheet in context['worksheets']:
+                print(worksheet.last_submission(student).status)
+
+
 
         context['worksheets'] = worksheets
+
         return context
 
 
