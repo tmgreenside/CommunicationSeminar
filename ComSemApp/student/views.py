@@ -73,9 +73,9 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         worksheets = self.course.worksheets.filter(status=teacher_constants.WORKSHEET_STATUS_RELEASED)
 
 
-        context['gradedCount'] = 0
-        context['ungradedCount'] = 0
-        context['incompleteCount']=0
+        context['complete'] = 0
+        context['incomplete'] = 0
+        context['ungraded']=0
 
         # TODO should this logic be in the worksheet model ? -Zeke
         for worksheet in worksheets:
