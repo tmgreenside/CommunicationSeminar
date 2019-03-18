@@ -121,10 +121,12 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             worksheet.button_text = button_texts[last_submission_status]
             worksheet.link_url = link_urls[last_submission_status]
 
-
-        print(context['gradedCount'])
-        print(context['ungradedCount'])
-        print(context['incompleteCount'])
+        print("complete")
+        print(context['complete'])
+        print("incomplete")
+        print(context['incomplete'])
+        print("ungraded")
+        print(context['ungraded'])
 
 
 
