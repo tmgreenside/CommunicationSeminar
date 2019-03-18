@@ -128,7 +128,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         print("ungraded")
         print(context['ungraded'])
 
-
+        context['worksheets'] = worksheets
 
         return context
 
