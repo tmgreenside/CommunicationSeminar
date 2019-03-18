@@ -112,14 +112,14 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             worksheet.button_text = button_texts[last_submission_status]
             worksheet.link_url = link_urls[last_submission_status]
 
-            
+
         context['worksheets'] = worksheets 
         context['gradedCount'] = 0
         context['ungradedCount'] = 0
         context['pendingCount']=0
         print("here")
         for worksheet in context['worksheets']:
-            print(worksheet.last_submission(student).status)
+            print(worksheet.last_submission(self.student).status)
 
 
 
