@@ -93,6 +93,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
                     if expression.worksheet == worksheet:
                         expressionList.append(expression.expression)
             if worksheet.status == "complete" :
+                print('Complete')
                 for expression in expressions:
                     if expression.worksheet == worksheet:
                         context['expressionCount'] += 1
