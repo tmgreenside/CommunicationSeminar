@@ -80,6 +80,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         context['complete'] = 0
         context['incomplete'] = 0
         context['ungraded']= 0
+        context['expressionCount']= 0
 
         # TODO should this logic be in the worksheet model ? -Zeke
         for worksheet in worksheets:
@@ -91,7 +92,10 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
                 for expression in expressions:
                     if expression.worksheet == worksheet:
                         expressionList.append(expression.expression)
-
+            if worksheet.status == "complete" :
+                for expression in expressions:
+                    if expression.worksheet == worksheet:
+                        context['expressionCount'] += 1
 
 
 
