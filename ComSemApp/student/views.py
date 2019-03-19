@@ -105,6 +105,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
                 context['complete'] += 1
                 for expression in expressions:
                     print('COMPLETE')
+                    print(expression.expression)
                     if expression.worksheet == worksheet:
                         context['expressionCount'] += 1
             if last_submission_status == "ungraded":
