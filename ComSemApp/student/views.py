@@ -72,13 +72,22 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         worksheets = self.course.worksheets.filter(status=teacher_constants.WORKSHEET_STATUS_RELEASED)
         submissions = StudentSubmission.objects.filter(student=self.student)
-       # for submission in submissions :
-         #   if submission.worksheet.course == self.course:
+
+        expression_filters = Q(worksheet=self.worksheet)
+        if not self.worksheet.display_all_expressions:
+            expression_filters &= (Q(student=self.student) | Q(student=None) | Q(all_do=True))
+        expressions = Expression.objects.filter(expression_filters)
+        for expression in expressions:
+            print(expression.expression)
+
+
+
+
         print(submissions)
 
         context['complete'] = 0
         context['incomplete'] = 0
-        context['ungraded']=0
+        context['ungraded']= 0
 
         # TODO should this logic be in the worksheet model ? -Zeke
         for worksheet in worksheets:
@@ -124,12 +133,6 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             worksheet.button_text = button_texts[last_submission_status]
             worksheet.link_url = link_urls[last_submission_status]
 
-        print("complete")
-        print(context['complete'])
-        print("incomplete")
-        print(context['incomplete'])
-        print("ungraded")
-        print(context['ungraded'])
 
         context['worksheets'] = worksheets
 
