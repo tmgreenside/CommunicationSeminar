@@ -76,7 +76,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
 
         expressions = Expression.objects.filter(student = self.student)
         context['expressionCount'] = 0
-        context['expressionList'] = list()
+        context['expressionList'] = []
         for expression in expressions:
             context['expressionCount'] += 1
             if expression.worksheet.status != "completed":
