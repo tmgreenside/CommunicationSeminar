@@ -141,7 +141,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             worksheet.button_text = button_texts[last_submission_status]
             worksheet.link_url = link_urls[last_submission_status]
 
-        print(expressionList)
+        context['expressions'] = expressionList
         context['worksheets'] = worksheets
 
         return context
