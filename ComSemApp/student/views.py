@@ -74,7 +74,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         submissions = StudentSubmission.objects.filter(student=self.student)
 
 
-        expressions = Expression.objects.filter(student = self.student, worksheet.course = self.course)
+        expressions = Expression.objects.filter(student = self.student)
         for expression in expressions:
             if expression.worksheet.status != "completed":
                 print(expression.expression)
