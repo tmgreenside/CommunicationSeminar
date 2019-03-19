@@ -72,8 +72,8 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         worksheets = self.course.worksheets.filter(status=teacher_constants.WORKSHEET_STATUS_RELEASED)
         submissions = StudentSubmission.objects.filter(student=student)
-        for submission in submissions :
-            if submission.worksheet.course == self.course:
+       # for submission in submissions :
+         #   if submission.worksheet.course == self.course:
         print(submissions)
 
         context['complete'] = 0
