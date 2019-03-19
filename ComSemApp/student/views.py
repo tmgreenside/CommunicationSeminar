@@ -72,8 +72,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         worksheets = self.course.worksheets.filter(status=teacher_constants.WORKSHEET_STATUS_RELEASED)
         submissions = StudentSubmission.objects.filter(student=self.student)
-
-        expression_filters = Q(worksheet=self.worksheet)
+        
         if not self.worksheet.display_all_expressions:
             expression_filters &= (Q(student=self.student) | Q(student=None) | Q(all_do=True))
         expressions = Expression.objects.filter(expression_filters)
@@ -99,6 +98,9 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
                 context['complete'] += 1
             if last_submission_status == "ungraded":
                 context['ungraded'] += 1
+
+
+            
 
             last_submission_id = last_submission.id if last_submission else 0
             status_colors = {
