@@ -81,6 +81,8 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             context['expressionCount'] += 1
             if expression.worksheet.status != "completed":
                 expressionList.append(expression.expression)
+            if context['expressionCount'] == 6:
+                break
         context['expressions'] = expressionList
 
 
