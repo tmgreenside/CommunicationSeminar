@@ -89,7 +89,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
                 expressions = Expression.objects.filter(expression_filters)
             if worksheet.status != "complete" :
                 for expression in expressions:
-                    if expression:
+                    if expression.worksheet = worksheet:
                         expressionList.append(expression.expression)
 
 
