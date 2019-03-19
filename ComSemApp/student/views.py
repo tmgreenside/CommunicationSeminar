@@ -72,20 +72,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         worksheets = self.course.worksheets.filter(status=teacher_constants.WORKSHEET_STATUS_RELEASED)
         submissions = StudentSubmission.objects.filter(student=self.student)
-
-
-        expressions = Expression.objects.filter(student = self.student)
-        context['expressionCount'] = 0
         expressionList = []
-        for expression in expressions:
-            print(expression)
-            context['expressionCount'] += 1
-            if expression.worksheet.status != "completed":
-                expressionList.append(expression.expression)
-            if context['expressionCount'] == 6:
-                break
-        context['expressions'] = expressionList
-
 
 
 
@@ -96,6 +83,19 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
 
         # TODO should this logic be in the worksheet model ? -Zeke
         for worksheet in worksheets:
+            expression_filters = Q(worksheet=worksheet)
+            if not self.worksheet.display_all_expressions:
+                expression_filters &= (Q(student=self.student) | Q(student=None) | Q(all_do=True))
+                expressions = Expression.objects.filter(expression_filters)
+            if worksheet.status != "complete" :
+                for expression in expressions:
+                    if expression:
+                        expressionList.append(expression.expression)
+
+
+
+
+
             last_submission = worksheet.last_submission(self.student)
             last_submission_status = last_submission.status if last_submission else "none"
             if last_submission_status == "incomplete" or last_submission_status == "none":
@@ -141,7 +141,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             worksheet.button_text = button_texts[last_submission_status]
             worksheet.link_url = link_urls[last_submission_status]
 
-
+        print(expressionList)
         context['worksheets'] = worksheets
 
         return context
