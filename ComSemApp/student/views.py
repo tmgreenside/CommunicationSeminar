@@ -73,7 +73,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         worksheets = self.course.worksheets.filter(status=teacher_constants.WORKSHEET_STATUS_RELEASED)
         submissions = StudentSubmission.objects.filter(student=self.student)
 
-        expression_filters &= (Q(student=self.student) | Q(student=None) | Q(all_do=True))
+        expression_filters = (Q(student=self.student) | Q(student=None) | Q(all_do=True))
         expressions = Expression.objects.filter(expression_filters)
         for expression in expressions:
             print(expression.expression)
