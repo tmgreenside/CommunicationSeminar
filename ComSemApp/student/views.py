@@ -82,7 +82,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             if expression.worksheet.status != "completed":
                 expressionList.append(expression.expression)
             
-
+        print(expressionList)
 
 
 
