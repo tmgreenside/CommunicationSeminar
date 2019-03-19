@@ -88,15 +88,8 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             if not worksheet.display_all_expressions:
                 expression_filters &= (Q(student=self.student) | Q(student=None) | Q(all_do=True))
                 expressions = Expression.objects.filter(expression_filters)
-            if worksheet.status != "complete" :
-                for expression in expressions:
-                    if expression.worksheet == worksheet:
-                        expressionList.append(expression.expression)
-            if worksheet.status == "complete" :
-                print('Complete')
-                for expression in expressions:
-                    if expression.worksheet == worksheet:
-                        context['expressionCount'] += 1
+
+
 
 
 
@@ -105,10 +98,20 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
             last_submission_status = last_submission.status if last_submission else "none"
             if last_submission_status == "incomplete" or last_submission_status == "none":
                 context['incomplete'] += 1
+                for expression in expressions:
+                    if expression.worksheet == worksheet:
+                        expressionList.append(expression.expression)
             if last_submission_status == "complete":
                 context['complete'] += 1
+                for expression in expressions:
+                    print('COMPLETE')
+                    if expression.worksheet == worksheet:
+                        context['expressionCount'] += 1
             if last_submission_status == "ungraded":
                 context['ungraded'] += 1
+                for expression in expressions:
+                    if expression.worksheet == worksheet:
+                        expressionList.append(expression.expression)
 
 
             
