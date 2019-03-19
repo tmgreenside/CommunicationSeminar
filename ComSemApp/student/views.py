@@ -84,7 +84,7 @@ class CourseDetailView(StudentCourseViewMixin, DetailView):
         # TODO should this logic be in the worksheet model ? -Zeke
         for worksheet in worksheets:
             expression_filters = Q(worksheet=worksheet)
-            if not self.worksheet.display_all_expressions:
+            if not worksheet.display_all_expressions:
                 expression_filters &= (Q(student=self.student) | Q(student=None) | Q(all_do=True))
                 expressions = Expression.objects.filter(expression_filters)
             if worksheet.status != "complete" :
