@@ -79,7 +79,6 @@ class CourseDetailView(TeacherCourseViewMixin, DetailView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
-        data['bob'] = 'Ron Johnson'
         worksheets = Worksheet.objects.filter(course=self.course)
         worksheetsdict = {}
         ungradedcountdict = {}
@@ -115,12 +114,7 @@ class CourseDetailView(TeacherCourseViewMixin, DetailView):
                 if submission.status == "incomplete":
                     incomplete = incomplete + 1
 
-        print("ugraded")
-        print(ungraded)
-        print("complete")
-        print(complete)
-        print("incomplete")
-        print(incomplete)
+
         data['classungraded'] = ungraded
         data['classincomplete'] = incomplete
         data['classcomplete'] = complete
