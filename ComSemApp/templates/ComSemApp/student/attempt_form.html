@@ -2,7 +2,7 @@
 
 <!-- recordmp3 needed by ComSemRecording -->
 <script src="{% static 'ComSemApp/js/opus-recorder/dist/recorder.min.js' %}"></script>
-<script src="{% static 'ComSemApp/js/ComSemRecording-opus.js' %}?{% now 'U' %}"></script>
+<script src="{% static 'ComSemApp/js/ComSemRecording-opus.js' %}?{% now "U" %}"></script>
 
 <input hidden type="text" id="create_or_update_url">
 
@@ -69,19 +69,6 @@
     </div>
 </div>
 
-<div id="recordQuickTranscribe">
-    <label>Quick Check Reformulation</label><br>
-    <div class="row" style="align: center">
-        <!-- Hit the button once to start recording, again to stop recording -->
-        <button id="GoogleTest" style="border-radius:100%; padding: 10px; text-align: center;">
-            <img src="{% static 'ComSemApp/images/google_logo.png' %}" height="40" width="40">
-        </button>
-        <audio id="GoogleTestAudio"></audio>
-
-        <div id="googleTranscription" style="padding:10px"></div>
-    </div>
-    <br><br>
-</div>
 
 <!-- AUDIO RECORDING -->
 <div class="row" id="display_reformulation_audioRow" style="{% if not worksheet.display_reformulation_audio %}display: none{% endif %}">
@@ -108,30 +95,22 @@
 
 
 <script>
-$('#GoogleTest').click(function() {
-    $('#googleTranscription').html("<p>Speak now</p>");
-});
-
 $("#saveAttempt").click(function(e){
     e.preventDefault()
-
     if( $("#CorrectedExpr").val().trim() == "" ){
         // must have a valid expression
         alert("Please enter a correction")
         return;
     }
-
     // because of audio, we must send a formdata object
     var attemptFormData = new FormData();
     attemptFormData.append( 'reformulation_text', $("#CorrectedExpr").val() );
-
     var reformulation_audio = $("#recordingslist #audioElement").length > 0 ? true : false
     if (reformulation_audio){
         attemptFormData.append( 'audio', audioReformulationBlob )
     } else {
         attemptFormData.append('delete_audio', true)
     }
-
     $.ajax({
         type: "POST",
         url: $("#create_or_update_url").val(),
@@ -147,7 +126,6 @@ $("#saveAttempt").click(function(e){
             cs_ajax_error(jqXHR, textStatus, errorThrown)
         },
     });
-
     clearEditor()
 });
 </script>

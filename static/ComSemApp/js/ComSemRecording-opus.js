@@ -1,4 +1,4 @@
-// include in pages that need to record / save / access audio files
+// include in pages that need to record / save / access audio files!
 
 var audioReformulationBlob;
 
@@ -57,7 +57,9 @@ function initializeRecorder(){
 		screenLogger('Audio stream is ready.');
 	});
 
+	// Apparently not being used
 	recorder.addEventListener( "dataAvailable", function(e){
+
 		var dataBlob = new Blob( [e.detail], { type: 'audio/ogg' } );
 		audioReformulationBlob = dataBlob; // save the current blob
 		var fileName = new Date().toISOString() + ".opus";
@@ -78,7 +80,7 @@ function initializeRecorder(){
 		li.appendChild(audio);
 
 		// recordingslist.appendChild(li);
-
+		
 		// changed in order to allow only one recording at a time:
 		$('#recordingslist').html(audio);
 		$('#deleteRecordingButton').attr('disabled', false);

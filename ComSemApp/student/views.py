@@ -24,6 +24,10 @@ from google.cloud.speech import types
 
 # googleClient = speech.SpeechClient()
 
+def TranscribeAudio(request):
+    
+    return
+
 class StudentViewMixin(RoleViewMixin):
 
     role_class = Student
