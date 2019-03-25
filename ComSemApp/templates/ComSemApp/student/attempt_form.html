@@ -95,6 +95,17 @@
 
 
 <script>
+<<<<<<< HEAD
+=======
+var speaking = false;
+
+$('#GoogleTest').click(function() {
+    // new plan: Google button works like the record and stop button
+    // in the existing reformulation recording.
+    $('#googleTranscription').html("<p>Speak now</p>");
+});
+
+>>>>>>> f84ac645707ad43eb89f4a47ceafe60c88fc8307
 $("#saveAttempt").click(function(e){
     e.preventDefault()
     if( $("#CorrectedExpr").val().trim() == "" ){
