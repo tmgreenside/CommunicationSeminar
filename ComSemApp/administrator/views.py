@@ -174,7 +174,7 @@ class StudentListView(AdminViewMixin, ListView):
             message_content.insert(0, ("" +  str((linecount - rejectcount)) + "/" + str(linecount)+ " Accounts created sucessfully\n" + "The below users were not added, Their line numbers are listed to the left,\nLines with multiple errors will be listed multiple times \n \n"))
             message_disp = "".join(message_content)
             messages.add_message(request, messages.ERROR, message_disp)
-            request.FILES.pop('file', None)
+            request.FILES.pop('file', None) #delete the csv file from memory
         return HttpResponseRedirect(self.success_url)
             
 
