@@ -69,6 +69,32 @@
     </div>
 </div>
 
+<!-- AUDIO RECORDING -->
+<div class="row" id="display_reformulation_audioRowGoogle" style="{% if not worksheet.display_reformulation_audio %}display: none{% endif %}">
+    {% include 'ComSemApp/audio_recording.html' %}
+</div>
+
+{% if attempt.audio %}
+<script>
+    $(function(){
+        $('#recordingslist').html("<audio controls id='audioElementGoogle' src='" + "{{ attempt.audio.url }}" + "' type='audio/mpeg'></audio>");
+        $('#deleteRecordingButton').show();
+    })
+</script>
+{% endif %}
+
+
+<div class="row">
+    <div class="col-12 text-center">
+        <div class="btn-group" role="group">
+            <button type="button" id="saveAttemptGoogle" class="btn btn-outline-success">Submit</button>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 <!-- AUDIO RECORDING -->
 <div class="row" id="display_reformulation_audioRow" style="{% if not worksheet.display_reformulation_audio %}display: none{% endif %}">

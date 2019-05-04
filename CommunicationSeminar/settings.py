@@ -33,6 +33,24 @@ ALLOWED_HOSTS = [
     'comsempython.us-east-2.elasticbeanstalk.com',
     'localhost',
     '.comsem.net',
+    '127.0.0.1',
+    #feel free to remove the below line, allows me to expose localhost to internet
+    'comsem.localhost.run',
+    'comsem2.localhost.run',
+    'comsem3.localhost.run',
+    'comsem4.localhost.run',
+    'comsem5.localhost.run',
+    'comsem6.localhost.run',
+    'comsem7.localhost.run',
+    'comsem8.localhost.run',
+    'comsem9.localhost.run',
+    'comsem10.localhost.run',
+    'comsem11.localhost.run',
+    'comsem12.localhost.run',
+    'comsem13.localhost.run',
+    'comsem14.localhost.run',
+    'comsem15.localhost.run',
+    'group08.localhost.run'
 ]
 
 # Application definition
@@ -46,6 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_select2',
+    'django_smoke_tests',
 ]
 
 MIDDLEWARE = [
@@ -104,7 +123,7 @@ else:
             'PORT': '3306',
             'NAME': 'CommunicationSeminarDjango',
             'USER': 'root',
-            'PASSWORD': 'tempcbsql',
+            'PASSWORD': '2017%ComSem',
         }
     }
 
